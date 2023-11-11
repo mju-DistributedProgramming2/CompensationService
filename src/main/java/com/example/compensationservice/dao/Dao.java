@@ -9,7 +9,7 @@ public abstract class Dao {
     public Dao()  {
         try {
             String url = "jdbc:mysql://localhost:3306/";
-            String dbName = "insurance";
+            String dbName = "myinsurance";
             String userName = "root";
             String password = "1205";
             connection = DriverManager.getConnection(url + dbName + "?useSSL=false&characterEncoding=UTF-8&serverTimezone=UTC", userName, password);

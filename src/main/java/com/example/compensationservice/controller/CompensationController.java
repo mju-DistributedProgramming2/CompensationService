@@ -29,6 +29,7 @@ public class CompensationController {
     public ExamineCompensationResponse examineCompensation(@RequestBody ExamineCompensationRequest examineCompensationRequest) throws RemoteException {
         System.out.println(examineCompensationRequest.toString());
         Accident accident = new Accident(examineCompensationRequest.getContractId(),examineCompensationRequest.getDate(),examineCompensationRequest.getLocation(),examineCompensationRequest.getCause(),examineCompensationRequest.getContent(),examineCompensationRequest.getDamage(),examineCompensationRequest.getAccountNumber(),examineCompensationRequest.getStatus());
+        System.out.println(accident.getId());
         boolean response = compensateService.examineCompensation(accident,examineCompensationRequest.getContractCompensation(),examineCompensationRequest.getStatus());
         ExamineCompensationResponse examineCompensationResponse = new ExamineCompensationResponse(response);
         return examineCompensationResponse;
