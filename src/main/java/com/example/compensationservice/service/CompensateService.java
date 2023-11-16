@@ -36,12 +36,11 @@ public class CompensateService extends UnicastRemoteObject implements Compensate
     @Override
     public boolean examineCompensation(Accident accident, int contractCompensation, AccidentStatus status) throws RemoteException{
         if(status== AccidentStatus.Compensate){
-      //      boolean isSuccess = accidentService.setStatus(accident.getId(), status);
-       //     if(!isSuccess) return false;
+            boolean isSuccess = accidentService.setStatus(accident.getId(), status);
+            if(!isSuccess) return false;
             int compensation = 0;
-       //     if(contractCompensation>=accident.getDamage()) compensation = (int) accident.getDamage();
-        //    if(contractCompensation<accident.getDamage()) compensation = contractCompensation;
-            accident.setId(1);
+            if(contractCompensation>=accident.getDamage()) compensation = (int) accident.getDamage();
+            if(contractCompensation<accident.getDamage()) compensation = contractCompensation;
             int id = compensationDao.add(new Compensation(accident.getId(), compensation));
             if(id!=0) return true;
             else return false;

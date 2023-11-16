@@ -27,6 +27,9 @@ public class Accident implements Serializable {
         this.status = status;
     }
 
+    public Accident() {
+    }
+
     public int getId() {
         return id;
     }

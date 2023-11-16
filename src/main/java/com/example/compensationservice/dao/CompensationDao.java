@@ -67,6 +67,7 @@ public class CompensationDao extends Dao {
 
     public Compensation findByAccidentId(int id) {
         for(Compensation compensation : retrieve()){
+            System.out.println(compensation.getAccidentId());
             if(compensation.getAccidentId()==id) return compensation;
         }
         return null;

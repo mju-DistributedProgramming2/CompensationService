@@ -11,4 +11,19 @@ public class GetCompensationResponse {
         this.accidentId = compensation.getAccidentId();
         this.compensation = compensation.getCompensation();
     }
+
+    public int getId() {return id;}
+
+    public int getAccidentId() {return accidentId;}
+
+    public int getCompensation() {return compensation;}
+
+    @Override
+    public String toString() {
+        return "GetCompensationResponse{" +
+                "id=" + id +
+                ", accidentId=" + accidentId +
+                ", compensation=" + compensation +
+                '}';
+    }
 }

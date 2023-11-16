@@ -11,17 +11,14 @@ public class Compensation implements Serializable {
     @Id
     @GeneratedValue
     private int id;
-    @Column(name = "accidentId",nullable = false)
+    @Column(name = "accident_id",nullable = false)
     private int accidentId;
     @Column(name = "compensation",nullable = false)
     private int compensation;
-
     public Compensation(int accidentId, int compensation) {
         this.accidentId = accidentId;
         this.compensation = compensation;
     }
-
-
     public int getId() {
         return id;
     }
