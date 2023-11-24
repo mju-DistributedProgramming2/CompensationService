@@ -27,7 +27,6 @@ public class CompensationController {
     }
     @PostMapping("/compensation")
     public ExamineCompensationResponse examineCompensation(@RequestBody ExamineCompensationRequest examineCompensationRequest) throws RemoteException {
-        System.out.println(examineCompensationRequest.toString());
         boolean response = compensateService.examineCompensation(examineCompensationRequest.getAccident(),examineCompensationRequest.getContractCompensation(),examineCompensationRequest.getStatus());
         ExamineCompensationResponse examineCompensationResponse = new ExamineCompensationResponse(response);
         return examineCompensationResponse;
