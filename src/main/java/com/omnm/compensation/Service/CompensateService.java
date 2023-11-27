@@ -30,30 +30,13 @@ import java.rmi.server.UnicastRemoteObject;
 public class CompensateService extends UnicastRemoteObject implements CompensateServiceIF {
     @Autowired
     CompensationDao compensationDao;
-  //  @Autowired
- //   private DiscoveryClient discoveryClient;
-    @Autowired
-    private RestTemplate restTemplate;
+
     @Autowired
     ObjectMapper objectMapper;
 
     protected CompensateService() throws RemoteException {
     }
 
-    @Override
-    public void setAccidentService(AccidentServiceIF accidentService)throws RemoteException{
-     //   this.accidentService = accidentService;
-      //  List<ServiceInstance> instances = discoveryClient.getInstances("other-service");
-
-        // 가져온 서비스 정보 중 하나 선택 (여기서는 첫 번째 것을 선택)
-      //  ServiceInstance serviceInstance = instances.get(0);
-
-        // 선택된 서비스의 URL을 구성
-      //  String url = serviceInstance.getUri().toString() + "/restEndpoint";
-
-        // RestTemplate을 사용하여 서비스 호출
-       // return restTemplate.getForObject(url, String.class);
-    }
     @Override
     public Compensation getCompensation(int id) throws RemoteException, NoDataException {
         Compensation compensation = compensationDao.findByAccidentId(id);
@@ -62,7 +45,6 @@ public class CompensateService extends UnicastRemoteObject implements Compensate
     }
     @Override
     public boolean examineCompensation(Accident accident, int contractCompensation, AccidentStatus status) throws RemoteException {
-        System.out.println(accident.getId());
         if (status == AccidentStatus.Compensate) {
             boolean isSuccess = getCustomerInCustomerService(accident.getId(), status);
             if (!isSuccess) return false;
@@ -85,25 +67,13 @@ public class CompensateService extends UnicastRemoteObject implements Compensate
                 .build()
                 .toUri();
 
-//        JSONObject joByMap = new JSONObject();
-//        joByMap.put("accidentId",Integer.toString(accidentId));
-//        joByMap.put("status",status);
-//        System.out.println(joByMap);
-        SetStatusRequest joByMap = new SetStatusRequest();
-        joByMap.setAccidentId(accidentId);
-        joByMap.setStatus(status);
+        SetStatusRequest setStatusRequest = new SetStatusRequest();
+        setStatusRequest.setAccidentId(accidentId);
+        setStatusRequest.setStatus(status);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
-        HttpEntity requestEntity = new HttpEntity(joByMap, headers);
-        System.out.println(requestEntity.getBody());
-
+        HttpEntity requestEntity = new HttpEntity(setStatusRequest, headers);
         ResponseEntity<SetStatusResponse> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, SetStatusResponse.class);
-
-        System.out.println("Status Code: " + result.getStatusCode());
-        System.out.println("Response Body: " + result.getBody());
-
         return result.getBody().isStatusResponse();
-//		return null;
     }
 }
