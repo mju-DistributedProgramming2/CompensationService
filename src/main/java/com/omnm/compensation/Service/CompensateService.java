@@ -3,6 +3,8 @@ package com.omnm.compensation.Service;
 
 
 
+import com.omnm.compensation.DTO.SetStatusRequest;
+import com.omnm.compensation.DTO.SetStatusResponse;
 import com.omnm.compensation.Entity.Accident;
 import com.omnm.compensation.Entity.Compensation;
 import com.omnm.compensation.configuration.Constants;
@@ -83,22 +85,25 @@ public class CompensateService extends UnicastRemoteObject implements Compensate
                 .build()
                 .toUri();
 
-        JSONObject joByMap = new JSONObject();
-        joByMap.put("accidentId",Integer.toString(accidentId));
-        joByMap.put("status",status);
-        System.out.println(joByMap);
+//        JSONObject joByMap = new JSONObject();
+//        joByMap.put("accidentId",Integer.toString(accidentId));
+//        joByMap.put("status",status);
+//        System.out.println(joByMap);
+        SetStatusRequest joByMap = new SetStatusRequest();
+        joByMap.setAccidentId(accidentId);
+        joByMap.setStatus(status);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity requestEntity = new HttpEntity(joByMap, headers);
         System.out.println(requestEntity.getBody());
 
-        ResponseEntity<String> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, String.class);
+        ResponseEntity<SetStatusResponse> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, SetStatusResponse.class);
 
         System.out.println("Status Code: " + result.getStatusCode());
         System.out.println("Response Body: " + result.getBody());
 
-        return false;
+        return result.getBody().isStatusResponse();
 //		return null;
     }
 }
