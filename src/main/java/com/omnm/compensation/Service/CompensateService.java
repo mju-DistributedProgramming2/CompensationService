@@ -4,14 +4,12 @@ package com.omnm.compensation.Service;
 
 
 import com.omnm.compensation.DTO.SetStatusRequest;
-import com.omnm.compensation.DTO.SetStatusResponse;
 import com.omnm.compensation.Entity.Accident;
 import com.omnm.compensation.Entity.Compensation;
 import com.omnm.compensation.configuration.Constants;
 import com.omnm.compensation.configuration.PatchRestTemplate;
 import com.omnm.compensation.DAO.CompensationDao;
 import com.omnm.compensation.enumeration.accident.AccidentStatus;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.*;
@@ -27,9 +25,6 @@ import java.rmi.server.UnicastRemoteObject;
 public class CompensateService implements CompensateServiceIF {
     @Autowired
     CompensationDao compensationDao;
-
-    @Autowired
-    ObjectMapper objectMapper;
 
     @Override
     public ResponseEntity<Compensation> getCompensation(int id){
@@ -68,7 +63,7 @@ public class CompensateService implements CompensateServiceIF {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity requestEntity = new HttpEntity(setStatusRequest, headers);
-        ResponseEntity<SetStatusResponse> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, SetStatusResponse.class);
-        return result.getBody().isStatusResponse();
+        ResponseEntity<Boolean> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, Boolean.class);
+        return result.getBody().booleanValue();
     }
 }
