@@ -14,32 +14,13 @@ import java.util.List;
 public class CompensationDao{
     @Autowired
     CompensationRepository compensationRepository;
-    public CompensationDao()   {
-        super();
+
+    public int createCompensation(Compensation compensation) {
+        return compensationRepository.save(compensation).getId();
     }
 
-    public boolean create(Compensation compensation) {
-        if(compensationRepository.save(compensation)==null)return false;
-        return true;
-    }
-
-    public List<Compensation> retrieve() {
-        List<Compensation> compensationList = compensationRepository.findAll();
-        return compensationList;
-    }
-
-    public int add(Compensation compensation) {
-        List<Compensation> compensationList = retrieve();
-        if(compensationList.size()==0)compensation.setId(1);
-        else {compensation.setId(compensationList.get(compensationList.size()-1).getId()+1);}
-        if(create(compensation)) return compensation.getId();
-        else {return 0;}
-    }
-
-    public Compensation findByAccidentId(int id) {
-        for(Compensation compensation : retrieve()){
-            if(compensation.getAccidentId()==id) return compensation;
-        }
-        return null;
+    public Compensation findCompensationByAccidentId(int id) {
+        try {return compensationRepository.findByAccidentId(id);}
+        catch (Exception e) {return null;}
     }
 }

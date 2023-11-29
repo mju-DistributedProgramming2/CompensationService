@@ -11,14 +11,11 @@ import com.omnm.compensation.configuration.Constants;
 import com.omnm.compensation.configuration.PatchRestTemplate;
 import com.omnm.compensation.DAO.CompensationDao;
 import com.omnm.compensation.enumeration.accident.AccidentStatus;
-import com.omnm.compensation.exception.NoDataException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -27,35 +24,33 @@ import java.rmi.server.UnicastRemoteObject;
 
 @Service
 @EnableDiscoveryClient
-public class CompensateService extends UnicastRemoteObject implements CompensateServiceIF {
+public class CompensateService implements CompensateServiceIF {
     @Autowired
     CompensationDao compensationDao;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    protected CompensateService() throws RemoteException {
-    }
-
     @Override
-    public Compensation getCompensation(int id) throws RemoteException, NoDataException {
-        Compensation compensation = compensationDao.findByAccidentId(id);
-        if(compensation == null) throw new NoDataException("보상내역이 존재하지 않습니다.");
-        return compensation;
+    public ResponseEntity<Compensation> getCompensation(int id){
+        Compensation compensation = compensationDao.findCompensationByAccidentId(id);
+        if(compensation == null) return new ResponseEntity<>(null,new HttpHeaders(),HttpStatus.valueOf(500));
+        return new ResponseEntity<>(compensation,new HttpHeaders(),HttpStatus.valueOf(200));
     }
     @Override
-    public boolean examineCompensation(Accident accident, int contractCompensation, AccidentStatus status) throws RemoteException {
+    public ResponseEntity<Boolean> postCompensation(Accident accident, int contractCompensation, AccidentStatus status) {
         if (status == AccidentStatus.Compensate) {
             boolean isSuccess = getCustomerInCustomerService(accident.getId(), status);
-            if (!isSuccess) return false;
+            if (!isSuccess) return new ResponseEntity<>(false,new HttpHeaders(),HttpStatus.valueOf(200));
             int compensation = 0;
             if (contractCompensation >= accident.getDamage()) compensation = (int) accident.getDamage();
             if (contractCompensation < accident.getDamage()) compensation = contractCompensation;
-            int id = compensationDao.add(new Compensation(accident.getId(), compensation));
-            if (id != 0) return true;
-            else return false;
+            int id = compensationDao.createCompensation(new Compensation(accident.getId(), compensation));
+            Boolean successFlag = false;
+            if (id != 0) successFlag =  true;
+            return new ResponseEntity<>(successFlag,new HttpHeaders(),HttpStatus.valueOf(200));
         } else{
-            return getCustomerInCustomerService(accident.getId(), status);
+            return new ResponseEntity<>(getCustomerInCustomerService(accident.getId(), status),new HttpHeaders(),HttpStatus.valueOf(200));
         }
     }
     public boolean getCustomerInCustomerService(int accidentId, AccidentStatus status) {
