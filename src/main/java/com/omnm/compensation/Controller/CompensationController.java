@@ -15,7 +15,7 @@ public class CompensationController {
     @Autowired
     CompensateService compensateService;
     @GetMapping("/compensation")
-    public ResponseEntity<Compensation> getCompensation(@Param("id") int id){
+    public ResponseEntity<Compensation> getCompensationById(@Param("id") int id){
         return compensateService.getCompensation(id);
     }
     @PostMapping("/compensation")
