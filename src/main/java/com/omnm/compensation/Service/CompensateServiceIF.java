@@ -12,6 +12,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface CompensateServiceIF  extends Remote {
-    ResponseEntity<Compensation> getCompensation(int id) throws RemoteException, NoDataException;
+    ResponseEntity<Compensation> getCompensationByAccidentId(int id) throws RemoteException, NoDataException;
     ResponseEntity<Boolean> postCompensation(Accident accident, int contractCompensation, AccidentStatus status) throws RemoteException;
 }

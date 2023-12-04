@@ -27,7 +27,7 @@ public class CompensateService implements CompensateServiceIF {
     CompensationDao compensationDao;
 
     @Override
-    public ResponseEntity<Compensation> getCompensation(int id){
+    public ResponseEntity<Compensation> getCompensationByAccidentId(int id){
         Compensation compensation = compensationDao.findCompensationByAccidentId(id);
         if(compensation == null) return new ResponseEntity<>(null,new HttpHeaders(),HttpStatus.valueOf(500));
         return new ResponseEntity<>(compensation,new HttpHeaders(),HttpStatus.valueOf(200));
@@ -41,6 +41,7 @@ public class CompensateService implements CompensateServiceIF {
             if (contractCompensation >= accident.getDamage()) compensation = (int) accident.getDamage();
             if (contractCompensation < accident.getDamage()) compensation = contractCompensation;
             int id = compensationDao.createCompensation(new Compensation(accident.getId(), compensation));
+            System.out.println(id);
             Boolean successFlag = false;
             if (id != 0) successFlag =  true;
             return new ResponseEntity<>(successFlag,new HttpHeaders(),HttpStatus.valueOf(200));
@@ -63,7 +64,9 @@ public class CompensateService implements CompensateServiceIF {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity requestEntity = new HttpEntity(setStatusRequest, headers);
-        ResponseEntity<Boolean> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, Boolean.class);
-        return result.getBody().booleanValue();
+        try {
+            ResponseEntity<Boolean> result = template.exchange(uri, HttpMethod.PATCH, requestEntity, Boolean.class);
+            return result.getBody().booleanValue();
+        }catch (Exception e) {return false;}
     }
 }

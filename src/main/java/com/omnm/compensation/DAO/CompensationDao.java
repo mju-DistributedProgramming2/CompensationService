@@ -20,6 +20,7 @@ public class CompensationDao{
     }
 
     public Compensation findCompensationByAccidentId(int id) {
+        System.out.println(compensationRepository.findByAccidentId(id));
         try {return compensationRepository.findByAccidentId(id);}
         catch (Exception e) {return null;}
     }
