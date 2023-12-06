@@ -3,7 +3,7 @@ package com.omnm.compensation.DTO;
 import com.omnm.compensation.Entity.Accident;
 import com.omnm.compensation.enumeration.accident.AccidentStatus;
 
-public class ExamineCompensationRequest {
+public class PostCompensationRequest {
     private Accident accident;
     private int contractCompensation;
     private AccidentStatus status;
