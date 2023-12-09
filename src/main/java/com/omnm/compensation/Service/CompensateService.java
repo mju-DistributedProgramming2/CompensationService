@@ -10,6 +10,7 @@ import com.omnm.compensation.configuration.Constants;
 import com.omnm.compensation.configuration.PatchRestTemplate;
 import com.omnm.compensation.DAO.CompensationDao;
 import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.exception.NoDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.http.*;
@@ -29,19 +30,21 @@ public class CompensateService implements CompensateServiceIF {
     @Override
     public ResponseEntity<Compensation> getCompensationByAccidentId(int id){
         Compensation compensation = compensationDao.findCompensationByAccidentId(id);
-        if(compensation == null) return new ResponseEntity<>(null,new HttpHeaders(),HttpStatus.valueOf(500));
+        try {
+            if(compensation == null) new NoDataException("");
+        }catch (Exception e){
+            return new ResponseEntity<>(null,new HttpHeaders(),HttpStatus.valueOf(500));
+        }
         return new ResponseEntity<>(compensation,new HttpHeaders(),HttpStatus.valueOf(200));
     }
     @Override
     public ResponseEntity<Boolean> postCompensation(Accident accident, int contractCompensation, AccidentStatus status) {
-        if (status == AccidentStatus.Compensate) {
-            boolean isSuccess = getCustomerInCustomerService(accident.getId(), status);
+        if (status == AccidentStatus.Compensate) {boolean isSuccess = getCustomerInCustomerService(accident.getId(), status);
             if (!isSuccess) return new ResponseEntity<>(false,new HttpHeaders(),HttpStatus.valueOf(200));
             int compensation = 0;
             if (contractCompensation >= accident.getDamage()) compensation = (int) accident.getDamage();
             if (contractCompensation < accident.getDamage()) compensation = contractCompensation;
             int id = compensationDao.createCompensation(new Compensation(accident.getId(), compensation));
-            System.out.println(id);
             Boolean successFlag = false;
             if (id != 0) successFlag =  true;
             return new ResponseEntity<>(successFlag,new HttpHeaders(),HttpStatus.valueOf(200));
