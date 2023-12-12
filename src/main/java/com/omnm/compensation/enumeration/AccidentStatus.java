@@ -1,4 +1,4 @@
-package com.omnm.compensation.enumeration.accident;
+package com.omnm.compensation.enumeration;
 
 public enum AccidentStatus {
     ReportAccident("사고접수"),

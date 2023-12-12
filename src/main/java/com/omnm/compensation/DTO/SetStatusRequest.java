@@ -1,6 +1,6 @@
 package com.omnm.compensation.DTO;
 
-import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.enumeration.AccidentStatus;
 
 public class SetStatusRequest {
     int accidentId;

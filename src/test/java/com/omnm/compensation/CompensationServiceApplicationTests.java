@@ -5,7 +5,7 @@ import com.omnm.compensation.DTO.PostCompensationRequest;
 import com.omnm.compensation.Entity.Accident;
 import com.omnm.compensation.Entity.Compensation;
 import com.omnm.compensation.Service.CompensateService;
-import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.enumeration.AccidentStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
-import java.sql.Timestamp;
 
 import static org.mockito.Mockito.*;
 
@@ -49,6 +47,7 @@ class CompensationServiceApplicationTests {
                 .andReturn();
 
         verify(compensateService, times(1)).getCompensationByAccidentId(1);
+        System.out.println("테스트가 성공적으로 완료되었습니다");
     }
 
     @Test
@@ -59,18 +58,14 @@ class CompensationServiceApplicationTests {
         AccidentStatus status = AccidentStatus.RefuseCompensate;
         PostCompensationRequest postCompensationRequest = new PostCompensationRequest(accident, contractCompensation, status);
 
-        // postCompensation 메서드가 호출될 때 ResponseEntity.ok(true)를 반환하도록 설정
         when(compensateService.postCompensation(accident, contractCompensation, status)).thenReturn(ResponseEntity.ok(true));
 
-        // POST 요청 수행
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/compensation")
                         .content(objectMapper.writeValueAsString(postCompensationRequest))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
-
-        // 테스트에서 예상하는 동작에 따라 검증
-        // postCompensation 메서드가 특정 인자로 호출되었는지 검증
-        verify(compensateService).postCompensation(any(), eq(contractCompensation), eq(status));
+        verify(compensateService).postCompensation(any(Accident.class), eq(contractCompensation), eq(status));
+        System.out.println("테스트가 성공적으로 완료되었습니다");
     }
 }

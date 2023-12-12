@@ -1,7 +1,7 @@
 package com.omnm.compensation.DTO;
 
 import com.omnm.compensation.Entity.Accident;
-import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.enumeration.AccidentStatus;
 
 public class PostCompensationRequest {
     private Accident accident;

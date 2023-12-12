@@ -9,7 +9,7 @@ import com.omnm.compensation.Entity.Compensation;
 import com.omnm.compensation.configuration.Constants;
 import com.omnm.compensation.configuration.PatchRestTemplate;
 import com.omnm.compensation.DAO.CompensationDao;
-import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.enumeration.AccidentStatus;
 import com.omnm.compensation.exception.NoDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -18,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 
 @Service
 @EnableDiscoveryClient

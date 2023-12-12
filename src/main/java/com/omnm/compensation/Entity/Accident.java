@@ -1,6 +1,6 @@
 package com.omnm.compensation.Entity;
 
-import com.omnm.compensation.enumeration.accident.AccidentStatus;
+import com.omnm.compensation.enumeration.AccidentStatus;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
