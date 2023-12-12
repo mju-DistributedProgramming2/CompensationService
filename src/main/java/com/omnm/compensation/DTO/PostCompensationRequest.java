@@ -8,6 +8,12 @@ public class PostCompensationRequest {
     private int contractCompensation;
     private AccidentStatus status;
 
+    public PostCompensationRequest(Accident accident, int contractCompensation, AccidentStatus status) {
+        this.accident = accident;
+        this.contractCompensation = contractCompensation;
+        this.status = status;
+    }
+
     public Accident getAccident() {
         return accident;
     }
